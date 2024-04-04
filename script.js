@@ -9,14 +9,17 @@
 */
 let ticket, tries, flag, highscore;
 
+//This the random number generator function. It generates a random number between 1 and 20. Math.random gives out a floating pt number between 0 and 1 , multiplied by 20 we get a floating pt number between 1 to 19 , when truncated and added with 1 it gives out integers between 1 and 20
 function rng() {
   return Math.trunc(Math.random() * 20) + 1;
 }
 
+//This function will display the message entered in the .message class (You win! ,You lose! , Too high! , Too low! etc )
 function showMessage(message) {
   document.querySelector('.message').textContent = message;
 }
 
+//This function updates the UI and resets everything from the message, background color , width of .number class , input value of .guess class and the score value to 20
 function updateUI() {
   document.querySelector('.score').textContent = tries;
   document.querySelector('.message').textContent = 'Start guessing...';
@@ -26,6 +29,7 @@ function updateUI() {
   document.querySelector('.number').style.width = '15rem';
 }
 
+//This function initialises the game and resets the variable values. Also uses the updateUI function defined above. Logs the ticket in console for dev uses.
 function initialiseGame() {
   ticket = rng();
   tries = 20;
@@ -35,8 +39,10 @@ function initialiseGame() {
   console.log(ticket);
 }
 
+//This is when the game is initialised on the first run , after that its initialised everytime 'AGain' button is clicked
 initialiseGame();
 
+//The logic on winning the game is given here. Background changes to green , .number class gets wider by 15rem , and the ticket is finally revealed to the user. Also the flag is set to 1 which will further prevent execution of loop incase the user keeps pressing the check button even after winning. Also the message saying 'you win' is shown.
 function gameWin() {
   showMessage('🎉 You win!!');
   document.querySelector('body').style.backgroundColor = '#60b347';
@@ -45,6 +51,7 @@ function gameWin() {
   flag = 1;
 }
 
+//THe logic on losing the game is given here. Background changes to red , the .score displays 0 and the ticket is revealed to the user. Also the message saying 'you lose' is shown.
 function gameLose() {
   showMessage('💥 You Lose!!');
   document.querySelector('body').style.backgroundColor = 'red';
@@ -52,12 +59,24 @@ function gameLose() {
   document.querySelector('.number').textContent = ticket;
 }
 
+//The logic of highscore. It keeps comparing scores of each round with a storage variable 'highscore'. If in case the score (tries) is higher than highscore , it becomes the new high score. Also the highscore is displayed in the .highscore class
+
 function highScore() {
   if (tries > highscore) {
     highscore = tries;
   }
   document.querySelector('.highscore').textContent = highscore;
 }
+
+/*The logic executed when the Check button is clicked. This first takes the value inputted by the user and stores it in 'val' variable. 
+
+Now it checks if flag is 1 (game is already won or not). If game is not won , it enters the loop. Now it checks if there are any more tries left (game is already lost or not). If game is not lost , it enters the loop. 
+
+Now it checks if there is input val , if not it shows a message 'no number entered'. If yes , it compares the val with the ticket. If they match , win condition is executed and the highscore is checked. Else the appropriate message (too high or too low) is shown , the tries are decremented by 1 and displayed. The game then carries on.
+
+If the number of tries runs out (becomes 0) , then lose condition is executed. 
+
+*/
 
 function handleCheckButtonClick() {
   const val = Number(document.querySelector('.guess').value);
@@ -80,10 +99,13 @@ function handleCheckButtonClick() {
   }
 }
 
+//Th first time the game is initialised by the command on line 43. After that it is initialised everytime 'Again' button is clicked.
+
 function handleAgainButtonClick() {
   initialiseGame();
 }
 
+//Event listeners are added to both 'Again' and 'Check' buttons.
 document
   .querySelector('.check')
   .addEventListener('click', handleCheckButtonClick);
